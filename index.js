@@ -1,10 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const app = express();
 
 // 引入 users.js
 const users = require('./routes/api/users.js');
 
+// 数据库部分
 // DB config
 const db = require('./config/keys.js').mongoURI;
 // Connect to mongodb
@@ -13,10 +15,13 @@ mongoose
   .then(() => console.log(`MongoDB connected`))
   .catch(err => console.log(err))
   
+// 使用 body-parser 中间件
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello World');
+// })
 
 // 使用 routes
 app.use('/api/users', users);
