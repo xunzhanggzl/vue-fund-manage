@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 const app = express();
 
 // 引入 users.js
@@ -19,9 +20,9 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World');
-// })
+// passport初始化
+app.use(passport.initialize());
+require('./config/passport.js')(passport);
 
 // 使用 routes
 app.use('/api/users', users);
