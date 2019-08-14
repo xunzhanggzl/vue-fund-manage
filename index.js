@@ -18,6 +18,8 @@ mongoose
   .connect(db, {useNewUrlParser: true})
   .then(() => console.log(`MongoDB connected`))
   .catch(err => console.log(err))
+// 解决一个API的报错
+mongoose.set('useFindAndModify', false)
   
 // 使用 body-parser 中间件
 app.use(bodyParser.urlencoded({ extended: false }))
