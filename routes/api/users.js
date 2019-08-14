@@ -10,9 +10,9 @@ const User = require('../../models/User.js');
 // $route GET api/users/test
 // @desc  返回请求的json数据
 // @access public
-router.get('/test', (req, res) => {
-  res.json({msg: "login"})
-})
+// router.get('/test', (req, res) => {
+//   res.json({msg: "login"})
+// })
 
 // $route POST api/users/register
 // @desc  返回请求的json数据
@@ -23,12 +23,13 @@ router.post('/register', (req, res) => {
   User.findOne({email:req.body.email})
     .then((user) => {
       if (user) {
-        res.status(400).json({email: "邮箱已被注册!"});
+        res.status(400).json("邮箱已被注册!");
       } else {
         const newUser = new User({
           name:req.body.name,
           email: req.body.email,
-          password: req.body.password
+          password: req.body.password,
+          identity: req.body.identity
         })
         // 密码加密后保存到数据库
         bcrypt.genSalt(10, function (err, salt) {
@@ -56,13 +57,17 @@ router.post("/login", (req, res) => {
   User.findOne({email})
     .then((user) => {
       if (!user) {
-        res.status(404).json({email:"用户不存在!"})
+        res.status(404).json("用户不存在!")
       } 
       // 密码匹配
       bcrypt.compare(password, user.password)
         .then(isMatch => {
           if (isMatch) {
-            const rule = {id: user.id, name: user.name};
+            const rule = {
+              id: user.id, 
+              name: user.name,
+              identity: user.identity
+            };
             // 规则 加密名字 过期时间 箭头函数
             jwt.sign(rule, keys.secretOrKey, {expiresIn: 3600}, (err, token) => {
               if(err) throw err;
@@ -72,12 +77,10 @@ router.post("/login", (req, res) => {
               })
             })
           } else {
-            res.status(400).json({password:"密码错误"});
+            res.status(400).json("密码错误!");
           }
         })
     })
 })
-
-
 
 module.exports = router;
