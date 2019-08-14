@@ -6,6 +6,9 @@ const app = express();
 
 // 引入 users.js
 const users = require('./routes/api/users.js');
+// 引入 profiles.js
+const profiles = require('./routes/api/profiles.js');
+
 
 // 数据库部分
 // DB config
@@ -26,6 +29,7 @@ require('./config/passport.js')(passport);
 
 // 使用 routes
 app.use('/api/users', users);
+app.use('/api/profiles', profiles);
 
 const port = process.env.PORT || 5000;
 
