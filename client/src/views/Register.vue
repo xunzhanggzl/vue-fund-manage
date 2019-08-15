@@ -17,7 +17,7 @@
             <el-input type="password" v-model="registerUser.password2" placeholder="请确认密码"></el-input>
           </el-form-item>
 
-          <el-form-item label="选择身份">
+          <el-form-item label="选择身份" prop="identity">
             <el-select v-model="registerUser.identity" placeholder="请选择身份">
               <el-option label="管理员" value="manager"></el-option>
               <el-option label="员工" value="employee"></el-option>
@@ -37,6 +37,13 @@
 export default {
   name: "register",
   data() {
+    let validatePass = (rule, value, callback) => {
+      if (value !== this.registerUser.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       registerUser:{
         name: "",
@@ -44,8 +51,44 @@ export default {
         password: "",
         password2: "",
         identity: ""
+      },
+      rules: {
+        name: [
+          { required: true, message: '用户名不能为空', trigger: 'blur' },
+          { min: 2, max: 15, message: '长度在2到15个字符之间', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '邮箱格式不正确', trigger: 'blur', type: 'email'}
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { min: 6, max: 30, message: '长度在6到30个字符之间', trigger: 'blur' }
+        ],
+        password2: [
+          { required: true, message: '确认密码不能为空', trigger: 'blur' },
+          { min: 6, max: 30, message: '长度在6到30个字符之间', trigger: 'blur' },
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        // 自己添加的身份验证
+        identity: [
+          { required: true, message: '身份不能为空', trigger: 'blur' },
+          { min: 3, max: 30, trigger: 'blur' },
+        ]
       }
     }
+  },
+  methods: {
+    submitForm(formName) {
+      console.log(formName)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
   },
   components: {}
 }
