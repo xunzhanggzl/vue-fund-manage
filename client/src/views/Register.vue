@@ -3,6 +3,31 @@
     <section class="form_container">
       <div class="manage_tip">
         <span class="title">后台管理系统</span>
+        <el-form :model="registerUser" status-icon :rules="rules" ref="registerForm" label-width="80px" class="registerForm">
+          <el-form-item label="用户名" prop="name">
+            <el-input v-model="registerUser.name" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="registerUser.email" placeholder="请输入email"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="registerUser.password" placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="password2">
+            <el-input type="password" v-model="registerUser.password2" placeholder="请确认密码"></el-input>
+          </el-form-item>
+
+          <el-form-item label="选择身份">
+            <el-select v-model="registerUser.identity" placeholder="请选择身份">
+              <el-option label="管理员" value="manager"></el-option>
+              <el-option label="员工" value="employee"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" class="submit_btn" @click="submitForm('registerForm')">注册</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </section>
   </div>
@@ -11,6 +36,17 @@
 <script>
 export default {
   name: "register",
+  data() {
+    return {
+      registerUser:{
+        name: "",
+        email: "",
+        password: "",
+        password2: "",
+        identity: ""
+      }
+    }
+  },
   components: {}
 }
 </script>
@@ -38,5 +74,16 @@ export default {
     font-weight: bold;
     font-size: 26px;
     color: #fff;
+  }
+
+  .registerForm{
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px 40px 20px 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px #cccc;
+  }
+  .submit_btn{
+    width: 100%;
   }
 </style>
