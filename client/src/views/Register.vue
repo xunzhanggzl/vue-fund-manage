@@ -86,7 +86,7 @@ export default {
           this.$axios.post("/api/users/register", this.registerUser)
             .then(res => {
               // 注册成功
-              // 这是.vue文件，如果是在.js文件中，需要引入Message，详见http.js
+              // 这是.vue文件，如果是在.js文件中，需要引入Message，与http.js中的引入作对比
               this.$message({
                 message: "账号注册成功",
                 type: "success"
