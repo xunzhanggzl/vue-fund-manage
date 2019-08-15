@@ -82,10 +82,17 @@ export default {
       console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
+          // 注册请求
+          this.$axios.post("/api/users/register", this.registerUser)
+            .then(res => {
+              // 注册成功
+              // 这是.vue文件，如果是在.js文件中，需要引入Message，详见http.js
+              this.$message({
+                message: "账号注册成功",
+                type: "success"
+              })
+            })
+          this.$router.push("/login")
         }
       });
     },
