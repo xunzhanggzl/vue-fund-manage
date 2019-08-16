@@ -9,7 +9,7 @@ import jwt_decode from 'jwt-decode'
 export default {
   name: "app",
   created() {
-    if (localStorage) {
+    if (localStorage.eleToken) {
       // 解析token
       const decoded = jwt_decode(localStorage.eleToken);
       // token 存储到vuex中

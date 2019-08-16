@@ -1,12 +1,15 @@
 <template>
   <div class="index">
-    123
+    <HeadNav></HeadNav>
   </div>
 </template>
 
 <script>
-export default {
-  name: "index",
-  components: {}
-}
+  import HeadNav from '../components/HeadNav';
+  export default {
+    name: "index",
+    components: {
+      HeadNav
+    }
+  }
 </script>
