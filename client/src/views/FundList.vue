@@ -92,7 +92,7 @@
       </el-table>
     </div>
 
-    <Vlog :vlog="vlog"></Vlog>
+    <Vlog :vlog="vlog" @update="getProfile"></Vlog>
   </div>
 </template>
 
