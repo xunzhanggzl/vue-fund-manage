@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <el-dialog
-      title="添加资金信息"
+      :title="vlog.title"
       :visible.sync="vlog.show"
       :close-on-click-modal=false
       :modal-append-to-body=false
@@ -51,15 +51,6 @@ export default {
   name: 'vlog',
   data() {
     return {
-      formData: {
-        type: "",
-        describe: "",
-        income: "",
-        expend: "",
-        cash: "",
-        remark: "",
-        id: ""
-      },
       format_type_list:[
         "提现",
         "提现手续费",
@@ -88,7 +79,8 @@ export default {
     onSubmit(form) {
       this.$refs[form].validate(valid => {
         if (valid) {
-          this.$axios.post("/api/profiles/add", this.formData)
+          const url = this.vlog.option === "add" ? "add" : `edit/${this.formData.id}`;
+          this.$axios.post(`/api/profiles/${url}`, this.formData)
             .then(res => {
               // 添加成功
               this.$message({
@@ -104,8 +96,12 @@ export default {
     }
   },
   props: {
-    vlog: Object
-  }
+    vlog: Object,
+    formData: Object
+  },
+  created() {
+    console.log(this.formData)
+  },
 }
 </script>
 

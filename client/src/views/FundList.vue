@@ -92,7 +92,7 @@
       </el-table>
     </div>
 
-    <Vlog :vlog="vlog" @update="getProfile"></Vlog>
+    <Vlog :vlog="vlog" :formData="formData" @update="getProfile"></Vlog>
   </div>
 </template>
 
@@ -105,8 +105,18 @@
         tableData: [],
         vlog: {
           show: false,
-          title: ""
-        }
+          title: "",
+          option: "edit"
+        },
+        formData: {
+          type: "",
+          describe: "",
+          income: "",
+          expend: "",
+          cash: "",
+          remark: "",
+          id: ""
+        },
       }
     }, 
     created() {
@@ -125,15 +135,47 @@
           })
       },
       handleEdit(index, row) {
-        console.log(index);
+        // console.log(index);
         console.log(row);
+        this.vlog = {
+          show: true,
+          title: "修改资金信息",
+          option: "edit"
+        }
+        this.formData = {
+          type: row.type,
+          describe: row.describe,
+          income: row.income,
+          expend: row.expend,
+          cash: row.cash,
+          remark: row.remark,
+          id: row._id
+        }
       },
       handleDelete(index, row) {
         console.log(index);
         console.log(row);
+        this.$axios.delete(`/api/profiles/delete/${row._id}`)
+          .then(res => {
+            this.$message("删除成功");
+            this.getProfile();
+          })
       },
       handleAdd() {
-        this.vlog.show = true;
+        this.vlog = {
+          show: true,
+          title: "添加资金信息",
+          option: "add"
+        }
+        this.formData = {
+          type: "",
+          describe: "",
+          income: "",
+          expend: "",
+          cash: "",
+          remark: "",
+          id: ""
+        }
       }
     },
     components: {
