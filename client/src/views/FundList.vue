@@ -1,8 +1,26 @@
 <template>
   <div class="fillContainer">
     <div class="">
-      <el-form :inline="true" ref="add_data">
-        <el-form-item class="btnRight">
+      <el-form :inline="true" ref="add_data" :model="search_date">
+        <el-form-item label="按照时间筛选">
+          <el-date-picker
+            v-model="search_date.startTime"
+            type="date"
+            placeholder="选择开始时间"
+            >
+          </el-date-picker>
+          --
+          <el-date-picker
+            v-model="search_date.endTime"
+            type="date"
+            placeholder="选择结束时间"
+            >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" icon="search" @click="handleSearch()">筛选</el-button>
+        </el-form-item>
+        <el-form-item class="btnRight" v-if="user.identity==='manager'">
           <el-button type="primary" size="small" icon="view" @click="handleAdd()">添加</el-button>
         </el-form-item>
       </el-form>
@@ -75,7 +93,7 @@
           align='center'
           width="200">
         </el-table-column>
-        <el-table-column label="操作" align='center' prop="operation" width="180">
+        <el-table-column label="操作" align='center' prop="operation" width="180" v-if="user.identity==='manager'">
           <template slot-scope="scope">
             <el-button
               type="warning"
@@ -119,6 +137,11 @@
     name: "fundlist",
     data() {
       return {
+        search_date: {
+          startTime: "",
+          endTime: ""
+        },
+        filterTableData: [],
         paginations: {
           page_index: 1, // 当前位于哪页
           total: 0, // 总数
@@ -144,6 +167,11 @@
         },
       }
     }, 
+    computed: {
+      user() {
+        return this.$store.getters.user;
+      }
+    },
     created() {
       this.getProfile();
     },
@@ -154,6 +182,7 @@
           .then(res => {
             console.log(res)
             this.allTableData = res.data;
+            this.filterTableData = res.data;
             // 设置分页数据
             this.setPaginations();
           })
@@ -232,6 +261,25 @@
           }
         }
         this.tableData = tables;
+      },
+      handleSearch() {
+        if (!this.search_date.startTime || !this.search_date.endTime) {
+          this.$message({
+            type: "warning",
+            message: "请选择时间区间"
+          });
+          this.getProfile();
+          return;
+        }
+        const sTime = this.search_date.startTime.getTime();
+        const eTime = this.search_date.endTime.getTime();
+        this.allTableData = this.filterTableData.filter(item => {
+          let date = new Date(item.date);
+          let time = date.getTime();
+          return time >= sTime && time <= eTime;
+        })
+        // 分页数据的调用
+        this.setPaginations();
       }
     },
     components: {
